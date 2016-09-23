@@ -339,6 +339,25 @@ window.scroblrGlobal = (function () {
                 }
             }
         }
+        
+        // Chrome 28+ notifications
+        if (chrome && getOptionStatus("notifications")) {
+            // Create unique notification id from message contents
+            var notificationId = (message.title + message.message).replace(/\s+/, "");
+            
+            chrome.notifications.create(notificationId, {
+                type: 'basic',
+                iconUrl: message.image,
+                title: message.title,
+                message: message.message
+            });
+            
+            if (getOptionStatus("autodismiss")) {
+                window.setTimeout(function () {
+                    chrome.notifications.clear(notificationId);
+                }, 5000);
+            }
+        }
 
         if (firefox) {
             firefox.showNotification(message);
