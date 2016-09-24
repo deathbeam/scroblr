@@ -161,7 +161,8 @@ window.scroblrView = (function () {
             "disable_scrobbling",
             "disable_notifications",
             "disable_autodismiss",
-            "disable_youtube"
+            "disable_youtube",
+            "disable_scrobbling_spotify"
         ];
 
         for (i = 0, max = options.length; i < max; i += 1) {

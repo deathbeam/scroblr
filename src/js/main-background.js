@@ -339,25 +339,6 @@ window.scroblrGlobal = (function () {
                 }
             }
         }
-        
-        // Chrome 28+ notifications
-        if (chrome && getOptionStatus("notifications")) {
-            // Create unique notification id from message contents
-            var notificationId = (message.title + message.message).replace(/\s+/, "");
-            
-            chrome.notifications.create(notificationId, {
-                type: 'basic',
-                iconUrl: message.image,
-                title: message.title,
-                message: message.message
-            });
-            
-            if (getOptionStatus("autodismiss")) {
-                window.setTimeout(function () {
-                    chrome.notifications.clear(notificationId);
-                }, 5000);
-            }
-        }
 
         if (firefox) {
             firefox.showNotification(message);
@@ -405,9 +386,14 @@ window.scroblrGlobal = (function () {
 
         for (i = 0, max = history.length; i < max; i += 1) {
             track = history[i];
+            var shouldScrobble = getOptionStatus("scrobbling");
 
-            if (!track.scrobbled && lf_session && getOptionStatus("scrobbling") &&
-                trackShouldBeScrobbled(track)) {
+            if (track.host === "spotify" && !getOptionStatus("scrobbling_spotify")) {
+                shouldScrobble = false;
+            }
+
+            if (!track.scrobbled && lf_session && shouldScrobble &&
+                    trackShouldBeScrobbled(track)) {
                 requestParams = {
                     api_key:   conf.API_KEY,
                     artist:    track.artist,
@@ -470,6 +456,10 @@ window.scroblrGlobal = (function () {
         artistTitlePresent = (currentTrack.artist && currentTrack.title ? true : false);
         scrobblingEnabled  = getOptionStatus("scrobbling");
         serviceEnabled     = getOptionStatus(currentTrack.host);
+
+        if (currentTrack.host === "spotify" && !getOptionStatus("scrobbling_spotify")) {
+            scrobblingEnabled = false;
+        }
 
         if (lf_session && scrobblingEnabled && artistTitlePresent && serviceEnabled) {
             params = {

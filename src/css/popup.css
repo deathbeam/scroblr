@@ -364,6 +364,7 @@ button {
 .settings-options {
 	line-height: 18px;
 	margin: 10px;
+	margin-top: -8px;
 }
 
 	.settings-options label:hover {

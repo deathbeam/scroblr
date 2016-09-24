@@ -71,7 +71,8 @@ function populateSettingsOptions() {
 	var options  = [
         "disable_scrobbling",
         "disable_notifications",
-        "disable_autodismiss"
+        "disable_autodismiss",
+        "disable_scrobbling_spotify"
 	];
 
 	for (key in plugins) {
